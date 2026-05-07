@@ -1,6 +1,5 @@
 ﻿using System;
 
-
 namespace Taller_Arbolitos
 {
     public interface ITree<T> where T : IComparable<T>

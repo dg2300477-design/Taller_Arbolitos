@@ -8,9 +8,6 @@ namespace Taller_Arbolitos
         [STAThread]
         static void Main()
         {
-            //HOLA XDXD
-            //XDXDXDXDXD
-            ///pulpo
             // To customize application configuration such as set high DPI settings or default font,
             // see https://aka.ms/applicationconfiguration.
             ApplicationConfiguration.Initialize();
