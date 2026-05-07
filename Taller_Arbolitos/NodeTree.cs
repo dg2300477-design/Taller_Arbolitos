@@ -14,6 +14,7 @@ namespace Taller_Arbolitos
             Data = data;
             Left = null;
             Right = null;
+            // Un nodo nuevo inicia con altura 1
             Height = 1;
         }
     }
