@@ -4,9 +4,10 @@ using System.Text;
 
 namespace Taller_Arbolitos
 {
-    public class AVLTree<T> where T : IComparable<T>
+    public class AVLTree<T> where T : IComparable<T> /* TreeBinary<T> where T : IComparable<T>*/
     {
         public NodeTree<T>? Root;
+
         private int Height(NodeTree<T>? node)
         {
             // Si el nodo no existe, altura = 0
@@ -59,6 +60,7 @@ namespace Taller_Arbolitos
 
         public void Insert(T data)
         {
+            //llama a un metodo recursivo privado
             Root = InsertRec(Root, data);
         }
 
@@ -110,6 +112,31 @@ namespace Taller_Arbolitos
             }
 
             return node;
+        }
+
+        public bool Contains(T data)
+        {
+            return ContainsRec(Root, data);
+        }
+
+        private bool ContainsRec(NodeTree<T>? node, T data)
+        {
+            // Si llegamos a null, no existe
+            if (node == null)
+                return false;
+
+            int comparison = data.CompareTo(node.Data);
+
+            // Encontrado
+            if (comparison == 0)
+                return true;
+
+            // Buscar izquierda
+            if (comparison < 0)
+                return ContainsRec(node.Left, data);
+
+            // Buscar derecha
+            return ContainsRec(node.Right, data);
         }
     }
 }
