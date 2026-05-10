@@ -1,5 +1,4 @@
 ﻿using System;
-using Taller_Arbolitos;
 
 namespace Taller_Arbolitos
 {
@@ -7,37 +6,28 @@ namespace Taller_Arbolitos
     {
         protected NodeTree<T>? root;
         protected int count;
+        public string recorridoActual { get; protected set; } = "";
 
-        public string RecorridoActual { get; protected set; } = "";
+        public virtual void Insert(T data) => root = insertRecursive(root, data);
 
-        public virtual void Insert(T data) => root = InsertRecursive(root, data);
-
-        protected virtual NodeTree<T> InsertRecursive(NodeTree<T>? node, T data)
+        protected virtual NodeTree<T> insertRecursive(NodeTree<T>? node, T data)
         {
-            if (node == null)
-            {
-                count++;
-                return new NodeTree<T>(data);
-            }
-
-            if (data.CompareTo(node.Data) < 0)
-                node.Left = InsertRecursive(node.Left, data);
-            else if (data.CompareTo(node.Data) > 0)
-                node.Right = InsertRecursive(node.Right, data);
+            if (node == null) { count++; return new NodeTree<T>(data); }
+            if (data.CompareTo(node.Data) < 0) node.Left = insertRecursive(node.Left, data);
+            else if (data.CompareTo(node.Data) > 0) node.Right = insertRecursive(node.Right, data);
 
             node.Height = 1 + Math.Max(GetHeight(node.Left), GetHeight(node.Right));
-
             return node;
         }
 
         public virtual T Remove(T data) { return default; }
 
-        public bool Contains(T data) => FindRecursive(root, data) != null;
+        public bool Contains(T data) => findRecursive(root, data) != null;
 
-        private NodeTree<T>? FindRecursive(NodeTree<T>? node, T data)
+        private NodeTree<T>? findRecursive(NodeTree<T>? node, T data)
         {
             if (node == null || node.Data.CompareTo(data) == 0) return node;
-            return data.CompareTo(node.Data) < 0 ? FindRecursive(node.Left, data) : FindRecursive(node.Right, data);
+            return data.CompareTo(node.Data) < 0 ? findRecursive(node.Left, data) : findRecursive(node.Right, data);
         }
 
         public T Min()
@@ -60,20 +50,37 @@ namespace Taller_Arbolitos
         public int Height() => GetHeight(root);
         protected int GetHeight(NodeTree<T>? node) => node == null ? 0 : node.Height;
 
-        public bool IsEmpty() => root == null;
-        public void Clear() { root = null; count = 0; RecorridoActual = ""; }
+        // Método para que el formulario calcule el balance
+        public int obtenerAlturaExterna(NodeTree<T>? node) => GetHeight(node);
 
+        public bool IsEmpty() => root == null;
+        public void Clear() { root = null; count = 0; recorridoActual = ""; }
         public NodeTree<T>? GetRoot() => root;
 
-        public void PreOrder() { RecorridoActual = ""; PreOrderRec(root); }
-        private void PreOrderRec(NodeTree<T>? node) { if (node != null) { RecorridoActual += node.Data + " "; PreOrderRec(node.Left); PreOrderRec(node.Right); } }
+        public void PreOrder() { recorridoActual = ""; preOrderRec(root); }
+        private void preOrderRec(NodeTree<T>? node) { if (node != null) { recorridoActual += node.Data + " "; preOrderRec(node.Left); preOrderRec(node.Right); } }
 
-        public void InOrder() { RecorridoActual = ""; InOrderRec(root); }
-        private void InOrderRec(NodeTree<T>? node) { if (node != null) { InOrderRec(node.Left); RecorridoActual += node.Data + " "; InOrderRec(node.Right); } }
+        public void InOrder() { recorridoActual = ""; inOrderRec(root); }
+        private void inOrderRec(NodeTree<T>? node) { if (node != null) { inOrderRec(node.Left); recorridoActual += node.Data + " "; inOrderRec(node.Right); } }
 
-        public void PostOrder() { RecorridoActual = ""; PostOrderRec(root); }
-        private void PostOrderRec(NodeTree<T>? node) { if (node != null) { PostOrderRec(node.Left); PostOrderRec(node.Right); RecorridoActual += node.Data + " "; } }
+        public void PostOrder() { recorridoActual = ""; postOrderRec(root); }
+        private void postOrderRec(NodeTree<T>? node) { if (node != null) { postOrderRec(node.Left); postOrderRec(node.Right); recorridoActual += node.Data + " "; } }
 
-        public void LevelOrder() { }
+        public void LevelOrder()
+        {
+            recorridoActual = "";
+            if (root == null) return;
+
+            System.Collections.Generic.Queue<NodeTree<T>> cola = new System.Collections.Generic.Queue<NodeTree<T>>();
+            cola.Enqueue(root);
+
+            while (cola.Count > 0)
+            {
+                var actual = cola.Dequeue();
+                recorridoActual += actual.Data + " ";
+                if (actual.Left != null) cola.Enqueue(actual.Left);
+                if (actual.Right != null) cola.Enqueue(actual.Right);
+            }
+        }
     }
 }
