@@ -116,6 +116,7 @@ namespace Taller_Arbolitos
 
         public bool Contains(T data)
         {
+            //al igual que "insert", "contains" llama al metodo recursivo
             return ContainsRec(Root, data);
         }
 
@@ -138,5 +139,109 @@ namespace Taller_Arbolitos
             // Buscar derecha
             return ContainsRec(node.Right, data);
         }
+
+        public T Remove(T data)
+        {
+            if (!Contains(data))
+                throw new Exception("El valor no existe.");
+
+            Root = RemoveRec(Root, data);
+
+            return data;
+        }
+
+        private NodeTree<T>? RemoveRec(NodeTree<T>? node, T data)
+        {
+            if (node == null)
+                return null;
+
+            int comparison = data.CompareTo(node.Data);
+
+            // BUSCAR EL NODO
+            if (comparison < 0)
+            {
+                node.Left = RemoveRec(node.Left, data);
+            }
+            else if (comparison > 0)
+            {
+                node.Right = RemoveRec(node.Right, data);
+            }
+
+            // NODO ENCONTRADO
+            else
+            {
+                // CASO 1: SIN HIJOS
+                if (node.Left == null && node.Right == null)
+                {
+                    return null;
+                }
+
+                // CASO 2: SOLO HIJO DERECHO
+                if (node.Left == null)
+                {
+                    return node.Right;
+                }
+
+                // CASO 3: SOLO HIJO IZQUIERDO
+                if (node.Right == null)
+                {
+                    return node.Left;
+                }
+
+                // CASO 4: DOS HIJOS
+                NodeTree<T> successor = GetMin(node.Right);
+
+                // Reemplazar valor
+                node.Data = successor.Data;
+
+                // Eliminar sucesor
+                node.Right = RemoveRec(node.Right, successor.Data);
+            }
+
+            // ACTUALIZAR ALTURA (AVL)
+            node.Height = 1 + Math.Max(Height(node.Left), Height(node.Right));
+
+
+            // BALANCE AVL
+            int balance = GetBalance(node);
+
+            // Left Left
+            if (balance > 1 && GetBalance(node.Left) >= 0)
+                return RightRotate(node);
+
+            // Left Right
+            if (balance > 1 && GetBalance(node.Left) < 0)
+            {
+                node.Left = LeftRotate(node.Left!);
+                return RightRotate(node);
+            }
+
+            // Right Right
+            if (balance < -1 && GetBalance(node.Right) <= 0)
+                return LeftRotate(node);
+
+            // Right Left
+            if (balance < -1 && GetBalance(node.Right) > 0)
+            {
+                node.Right = RightRotate(node.Right!);
+                return LeftRotate(node);
+            }
+
+            return node;
+        }
+
+        private NodeTree<T> GetMin(NodeTree<T> node)
+        {
+            NodeTree<T> current = node;
+
+            while (current.Left != null)
+            {
+                current = current.Left;
+            }
+
+            return current;
+        }
+
+
     }
 }
