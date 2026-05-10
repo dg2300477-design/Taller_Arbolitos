@@ -8,6 +8,20 @@ namespace Taller_Arbolitos
     {
         public NodeTree<T>? Root;
 
+        public NodeTree<T>? GetRoot()
+        {
+            return Root;
+        }
+
+        public bool IsEmpty()
+        {
+            return Root == null;
+        }
+
+        public void Clear()
+        {
+            Root = null;
+        }
         private int Height(NodeTree<T>? node)
         {
             // Si el nodo no existe, altura = 0
@@ -242,6 +256,49 @@ namespace Taller_Arbolitos
             return current;
         }
 
+        public T Min() //buscara el nodo que esté mas a la izquierda al ser el valor minimo del árbol
+        {
+            if (Root == null)
+                throw new Exception("El árbol está vacío.");
 
+            NodeTree<T> current = Root;
+
+            while (current.Left != null)
+            {
+                current = current.Left;
+            }
+
+            return current.Data;
+        }
+
+        public T Max() //buscara el dato mayor, ubicado a la derecha del árbol
+        {
+            if (Root == null)
+                throw new Exception("El árbol está vacío.");
+
+            NodeTree<T> current = Root;
+
+            while (current.Right != null)
+            {
+                current = current.Right;
+            }
+
+            return current.Data;
+        }
+
+        public int Count()
+        {
+            return CountRec(Root);
+        }
+
+        private int CountRec(NodeTree<T>? node)
+        {
+            if (node == null)
+                return 0;
+
+            return 1
+                + CountRec(node.Left)
+                + CountRec(node.Right);
+        }
     }
 }
