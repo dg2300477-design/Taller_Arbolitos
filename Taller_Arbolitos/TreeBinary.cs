@@ -20,7 +20,44 @@ namespace Taller_Arbolitos
             return node;
         }
 
-        public virtual T Remove(T data) { return default; }
+        // --- NUEVO: Lógica de Eliminación para BST ---
+        public virtual T Remove(T data)
+        {
+            if (Contains(data))
+            {
+                root = removeRecursive(root, data);
+            }
+            return data;
+        }
+
+        protected virtual NodeTree<T> removeRecursive(NodeTree<T>? node, T data)
+        {
+            if (node == null) return null;
+
+            if (data.CompareTo(node.Data) < 0)
+                node.Left = removeRecursive(node.Left, data);
+            else if (data.CompareTo(node.Data) > 0)
+                node.Right = removeRecursive(node.Right, data);
+            else
+            {
+                // Caso 1 y 2: Sin hijos o con un solo hijo
+                if (node.Left == null) { count--; return node.Right; }
+                if (node.Right == null) { count--; return node.Left; }
+
+                // Caso 3: Dos hijos. Buscamos el menor del subárbol derecho
+                node.Data = minValue(node.Right);
+                node.Right = removeRecursive(node.Right, node.Data);
+            }
+            return node;
+        }
+
+        protected T minValue(NodeTree<T> node)
+        {
+            T minv = node.Data;
+            while (node.Left != null) { minv = node.Left.Data; node = node.Left; }
+            return minv;
+        }
+        // ----------------------------------------------
 
         public bool Contains(T data) => findRecursive(root, data) != null;
 
@@ -50,7 +87,6 @@ namespace Taller_Arbolitos
         public int Height() => GetHeight(root);
         protected int GetHeight(NodeTree<T>? node) => node == null ? 0 : node.Height;
 
-        // Método para que el formulario calcule el balance
         public int obtenerAlturaExterna(NodeTree<T>? node) => GetHeight(node);
 
         public bool IsEmpty() => root == null;
