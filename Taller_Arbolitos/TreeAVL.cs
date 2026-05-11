@@ -28,6 +28,8 @@ namespace Taller_Arbolitos
         // --- NUEVO: Eliminación con auto-balanceo para AVL ---
         public override T Remove(T data)
         {
+            // Primero verifica si el valor existe dentro del árbol.
+            // Esto evita intentar eliminar algo inexistente.
             if (Contains(data))
             {
                 root = removeAVL(root, data);
@@ -38,22 +40,31 @@ namespace Taller_Arbolitos
         private NodeTree<T> removeAVL(NodeTree<T>? node, T data)
         {
             if (node == null) return node;
-
+            //si el dato es menor, ira buscando por la izquierda
             if (data.CompareTo(node.Data) < 0) node.Left = removeAVL(node.Left, data);
+            //si el dato es mayor, ira buscando por la derecha
             else if (data.CompareTo(node.Data) > 0) node.Right = removeAVL(node.Right, data);
             else
-            {
+            {   ///caso 1: el nodo un hijo o no tiene ninguno
                 if ((node.Left == null) || (node.Right == null))
                 {
+                    ///temp guarda el hijo que exista(en caso de que haya un hijo)
                     NodeTree<T> temp = null == node.Left ? node.Right : node.Left;
-                    if (temp == null) { temp = node; node = null; } else { node = temp; }
+                    ///si temp es nulo(no hay hijos), temp apuntara al noddo para luego eliminarlo
+                    if (temp == null) { temp = node; node = null; } 
+                    ///en caso ded que haya un solo hijo, el hijo reemplazara al nodo eliminado
+                    else { node = temp; }
                     count--;
                 }
+                ///caso 2: el nodo tiene 2 hijos
                 else
-                {
+                {   ///busca el nodo mas pequeño del arbol derecho
                     NodeTree<T> tempMin = node.Right;
+                    ///ira completamente hacia la izquierda
                     while (tempMin.Left != null) tempMin = tempMin.Left;
+                    /// Reemplaza el valor del nodo actual con el valor del sucesor
                     node.Data = tempMin.Data;
+                    ///elimina el sucesor duplicado del subarbol derecho
                     node.Right = removeAVL(node.Right, tempMin.Data);
                 }
             }
