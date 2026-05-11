@@ -25,7 +25,7 @@ namespace Taller_Arbolitos
             return node;
         }
 
-        // --- NUEVO: Eliminación con auto-balanceo para AVL ---
+        // ---Eliminación con auto-balanceo para AVL ---
         public override T Remove(T data)
         {
             // Primero verifica si el valor existe dentro del árbol.

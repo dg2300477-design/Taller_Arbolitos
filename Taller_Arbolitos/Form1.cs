@@ -100,7 +100,7 @@ namespace Taller_Arbolitos
             if (int.TryParse(txtValorNodo.Text, out int val)) { miArbol.Insert(val); txtValorNodo.Clear(); txtValorNodo.Focus(); actualizarInfoArbol(); }
         }
 
-        // --- NUEVO: Evento para Eliminar ---
+        // ---Evento para Eliminar ---
         private void btnEliminarClick(object sender, EventArgs e)
         {
             if (int.TryParse(txtValorNodo.Text, out int val))
@@ -120,7 +120,7 @@ namespace Taller_Arbolitos
             }
         }
 
-        // --- NUEVO: Evento para Generar 15 números al azar ---
+        // ---Evento para Generar 15 números al azar ---
         private void btnAleatorioClick(object sender, EventArgs e)
         {
             Random rnd = new Random();

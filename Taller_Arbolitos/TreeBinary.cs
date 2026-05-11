@@ -20,7 +20,7 @@ namespace Taller_Arbolitos
             return node;
         }
 
-        // --- NUEVO: Lógica de Eliminación para BST ---
+        // ---Lógica de Eliminación para BST ---
         public virtual T Remove(T data)
         {
             if (Contains(data))
